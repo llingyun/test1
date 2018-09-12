@@ -1,0 +1,11 @@
+
+server:
+  port: 8089
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/fep-tuoming?autoReconnect=true&amp; =convertToNull&amp;useUnicode=true&amp;characterEncoding=UTF-8
+    username: root
+    password: root
+  thymeleaf:
+    cache: false
+debug: true

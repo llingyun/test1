@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>hello</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <script src="../assets/js/lib.min.js"></script>
+    <script src="../assets/js/config.js"></script>
+</head>
+<body>
+<div  class="text-center" id="main1" style="width: 600px;height:400px;display:flex; margin:auto"></div>
+<h1 class="text-center" th:text="${msg}"></h1>
+<div class="text-center" id="main2" style="width: 600px; height:400px; margin:auto"></div>
+<h1 class="text-center">北京市地图</h1>
+<div class="pull-center" id="main3" style="width: 1000px; height:800px; margin:auto"></div>
+ <script type="text/javascript">
+ require(['echarts'],function(echarts) {
+	// 基于准备好的dom，初始化echarts实例
+     var myChart1 = echarts.init(document.getElementById('main1'));
+
+     // 指定图表的配置项和数据
+     var option1 = {
+         title: {
+             text: 'ECharts 入门示例'
+         },
+         tooltip: {},
+         legend: {
+             data:['销量']
+         },
+         xAxis: {
+             data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+         },
+         yAxis: {},
+         series: [{
+             name: '销量',
+             type: 'bar',
+             data: [5, 20, 36, 10, 10, 20]
+         }]
+     };
+
+     // 使用刚指定的配置项和数据显示图表。
+     myChart1.setOption(option1);
+     
+     //  基础雷达图
+     var myCharts2 = echarts.init(document.getElementById('main2'));
+    
+     var option2 = {
+ title: {
+     text: '基础雷达图'
+ },
+ tooltip: {},
+ legend: {
+     data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+ },
+ radar: {
+     // shape: 'circle',
+     name: {
+         textStyle: {
+             color: '#fff',
+             backgroundColor: '#999',
+             borderRadius: 3,
+             padding: [3, 5]
+        }
+     },
+     indicator: [
+        { name: '销售（sales）', max: 6500},
+        { name: '管理（Administration）', max: 16000},
+        { name: '信息技术（Information Techology）', max: 30000},
+        { name: '客服（Customer Support）', max: 38000},
+        { name: '研发（Development）', max: 52000},
+        { name: '市场（Marketing）', max: 25000}
+     ]
+ },
+ series: [{
+     name: '预算 vs 开销（Budget vs spending）',
+     type: 'radar',
+     // areaStyle: {normal: {}},
+     data : [
+         {
+             value : [4300, 10000, 28000, 35000, 50000, 19000],
+             name : '预算分配（Allocated Budget）'
+         },
+          {
+             value : [5000, 14000, 28000, 31000, 42000, 21000],
+             name : '实际开销（Actual Spending）'
+         }
+     ]
+ }]
+};
+ myCharts2.setOption(option2);
+     
+	 $(function() {
+	 		// 北京市地图
+	  		var myCharts3 = echarts.init(document.getElementById('main3'));
+			myCharts3.showLoading();
+	 		$.get('/../assets/json/map/beijing.json',function(mapJson) {
+	 			console.log(mapJson);
+	 			myCharts3.hideLoading();
+	 			echarts.registerMap('beijing', mapJson);
+	 			var option = {
+	 					title:{
+	 						text: '北京人口密度',
+	 						subtext:'来自于百度百家',
+	 						sublink:"https://map.baidu.com/"
+	 					},
+	 					tooltip: {
+	 						trigger:'item',
+	 						formatter: '{b}<br/>{c}(p/km2)'
+	 					},
+	 					toolbox: {
+	 						show: true,
+	 						orient: 'vertical',
+	 						left: 'right',
+	 						top: 'center',
+	 						feature: {
+	 							dataView:{readOnly: true},
+	 							restore:{},
+	 							saveAsImage:{}
+	 						}
+	 					},
+	 					visualMap: {
+	 						min:100,
+	 						max:30000,
+	 						realtime: false,
+	 						calculable: true,
+	 						inRange: {
+	 							color: ['lightskyblue','yellow', 'orangered']
+	 						}
+	 					},
+	 					series:[
+	 						{
+	 							name:'北京市人口密度统计',
+	 							type: 'map',
+	 							mapType: 'beijing', //自定义的图标类型
+	 							itemStyle:{
+	 								normal:{label:{show:true},
+	 								emphasis:{label:{show:true}}}
+	 							},
+	 							data:[
+	 								{name: '东城区',  value:21763},
+	 								{name: '西城区',  value: 25767},
+	 								{name: '朝阳区',  value: 8618},
+	 								{name: '海淀区',  value: 8539},
+	 								{name: '丰台区',  value: 7521},
+	 								{name: '石景山区', value: 7709},
+	 								{name: '大兴区',  value: 1491},
+	 								{name: '昌平区',  value: 1421},
+	 								{name: "通州区",  value: 1496},
+	 								{name: '房山区',  value: 521},
+	 								{name: '顺义区',  value: 984},
+	 								{name: '门头沟区', value: 211},
+	 								{name: '平谷区',  value: 445},
+	 								{name: '延庆区',  value: 158},
+	 								{name: '密云区',  value: 214},
+	 								{name: '怀柔区',  value: 179}
+	 							]
+	 						}
+	 					]
+	 			};
+	 			myCharts3.setOption(option);
+	 		});
+	 	});
+	
+ });
+ 	
+ </script>
+</body>
+</html>
